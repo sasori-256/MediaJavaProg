@@ -16,7 +16,14 @@ class HelloLabelFrame extends JFrame implements ActionListener {
       this.setVisible(true);
     }
     public void actionPerformed(ActionEvent ev) {
-      label.setText("Hello !");
+      double r = Math.random();
+      if (r <= 0.2) {
+        label.setText("<html><span style='font-size:36pt; color:white; background-color:rgb(50,90,255);'>bad</span></html>");
+      } else if (r <= 0.7) {
+        label.setText("<html><span style='font-size:36pt; color:white; background-color:rgb(50,255,90);'>soso</span></html>");
+      } else {
+        label.setText("<html><span style='font-size:36pt; color:white; background-color:rgb(255,200,210);'>good</span></html>");
+      }
     }
     public static void main(String argv[]) {
       new HelloLabelFrame();
