@@ -1,0 +1,5 @@
+#image(width: 45%, "ex5-1.png")
+#image(width: 45%, "ex5-2.png")
+#image(width: 45%, "ex5-3.png")
+#image(width: 45%, "ex5-4.png")
+#image(width: 45%, "ex5-5.png")
