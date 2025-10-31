@@ -4,21 +4,24 @@ import java.awt.*;
 class RectPanel extends JPanel {
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
-    g.setColor(Color.ORANGE);
-    g.fillRect(150, 150, 200, 200);
+    g.setColor(new Color(65, 75, 178));
+    g.fillRect(100, 100, 400, 400);
   }
 }
 
-class RectFrame extends JFrame {
-  public RectFrame() {
+class RectFrame1 extends JFrame {
+  public RectFrame1() {
     this.setTitle("RectFrame");
     this.setSize(500, 500);
-    this.add(new RectPanel());
+    RectPanel r = new RectPanel();
+    JLabel l = new JLabel("<html><body><h1>411</h1></body></html>", JLabel.CENTER);
+    r.add(l);
+    this.add(r);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
   }
 
   public static void main(String argv[]) {
-    new RectFrame();
+    new RectFrame1();
   }
 }
