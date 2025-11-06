@@ -2,11 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
+import java.lang.Math;
 
-class CirclePanel extends JPanel implements MouseListener {
+class CirclePanel extends JPanel implements MouseListener, MouseMotionListener {
   private int radius = 5;
-  private Color color = Color.red;
+  private Color color = new Color(255, 0, 0, 80);
   private int x[], y[], r[];
+  private int lastX = -1, lastY = -1;
   private Color c[];
   private int num = 0;
   final static int MAX = 5000;
@@ -17,6 +19,7 @@ class CirclePanel extends JPanel implements MouseListener {
     r = new int[MAX];
     c = new Color[MAX];
     this.addMouseListener(this);
+    this.addMouseMotionListener(this);
   }
 
   @Override
@@ -48,7 +51,9 @@ class CirclePanel extends JPanel implements MouseListener {
   }
 
   public void mousePressed(MouseEvent e) {
-    addCircle(e.getX(), e.getY());
+    lastX = e.getX();
+    lastY = e.getY();
+    addCircle(lastX, lastY);
   }
 
   public void mouseClicked(MouseEvent e) {
@@ -62,16 +67,39 @@ class CirclePanel extends JPanel implements MouseListener {
 
   public void mouseExited(MouseEvent e) {
   }
+
+  public void mouseDragged(MouseEvent e) {
+    // TODO: 点が半径距離以上離れているときに線形補間で点を追加するようにする
+    int mx = e.getX();
+    int my = e.getY();
+    int dx = mx - lastX;
+    int dy = my - lastY;
+    double dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > radius) {
+      int steps = (int) Math.floor(dist / radius);
+      for (int i = 1; i <= steps; i++) {
+        int ix = lastX + (int) (dx * i / (double) (steps + 1));
+        int iy = lastY + (int) (dy * i / (double) (steps + 1));
+        addCircle(ix, iy);
+      }
+    }
+    addCircle(mx, my);
+    lastX = mx;
+    lastY = my;
+  }
+
+  public void mouseMoved(MouseEvent e) {
+  }
 }
 
-class CircleFrame extends JFrame implements ActionListener, ChangeListener {
+class CircleFrame2 extends JFrame implements ActionListener, ChangeListener {
   private CirclePanel panel;
   private JPanel buttonPanel;
   private JButton redButton, greenButton, blueButton, cyanButton, magentaButton, yellowButton;
   private JSlider radiusSlider;
   private JLabel radiusLabel;
 
-  public CircleFrame() {
+  public CircleFrame2() {
     this.setTitle("CircleFrame");
     this.setSize(800, 500);
 
@@ -127,17 +155,17 @@ class CircleFrame extends JFrame implements ActionListener, ChangeListener {
 
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == redButton) {
-      panel.setColor(new Color(255, 0, 0, 90));
+      panel.setColor(new Color(255, 0, 0, 80));
     } else if (e.getSource() == greenButton) {
-      panel.setColor(new Color(0, 255, 0, 90));
+      panel.setColor(new Color(0, 255, 0, 80));
     } else if (e.getSource() == blueButton) {
-      panel.setColor(new Color(0, 0, 255, 90));
+      panel.setColor(new Color(0, 0, 255, 80));
     } else if (e.getSource() == cyanButton) {
-      panel.setColor(new Color(0, 255, 255, 90));
+      panel.setColor(new Color(0, 255, 255, 80));
     } else if (e.getSource() == magentaButton) {
-      panel.setColor(new Color(255, 0, 255, 90));
+      panel.setColor(new Color(255, 0, 255, 80));
     } else if (e.getSource() == yellowButton) {
-      panel.setColor(new Color(255, 255, 0, 90));
+      panel.setColor(new Color(255, 255, 0, 80));
     }
   }
 
@@ -148,6 +176,6 @@ class CircleFrame extends JFrame implements ActionListener, ChangeListener {
   }
 
   public static void main(String argv[]) {
-    new CircleFrame();
+    new CircleFrame2();
   }
 }
