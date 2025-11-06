@@ -12,6 +12,7 @@ class CombiFrame extends JFrame {
     for (int i = 0; i < 5; i++) {
       b2[i] = new JButton("<html><body><p bgcolor='yellow'>" + (i + 11) + "</p></body></html>");
     }
+    JTextArea t = new JTextArea(10, 20);
     this.setTitle("Panel Combination");
     p1.setLayout(new GridLayout(1, 10));
     p2.setLayout(new GridLayout(5, 1));
@@ -21,8 +22,10 @@ class CombiFrame extends JFrame {
     for (int i = 0; i < 5; i++) {
       p2.add(b2[i]);
     }
+    t.setText("Center");
     this.add(p1, BorderLayout.NORTH);
     this.add(p2, BorderLayout.WEST);
+    this.add(t, BorderLayout.CENTER);
     this.pack();
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
