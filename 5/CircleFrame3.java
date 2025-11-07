@@ -91,11 +91,28 @@ class CirclePanel extends JPanel implements MouseListener, MouseMotionListener {
   }
 }
 
+class ColorIndicatePanel extends JPanel {
+  private Color color = Color.red;
+
+  public void setColor(Color color) {
+    this.color = color;
+    this.repaint();
+  }
+
+  @Override
+  public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.setColor(color);
+    g.fillRect(0, 0, this.getWidth(), this.getHeight());
+  }
+}
+
 class CircleFrame3 extends JFrame implements ChangeListener {
   private CirclePanel panel;
   private JPanel colorPanel;
   private JSlider radiusSlider, rSlider, gSlider, bSlider, aSlider;
   private JLabel radiusLabel, rLabel, gLabel, bLabel, aLabel;
+  private ColorIndicatePanel colorIndicatePanel;
 
   public CircleFrame3() {
     this.setTitle("CircleFrame");
@@ -134,8 +151,13 @@ class CircleFrame3 extends JFrame implements ChangeListener {
     radiusPanel.add(radiusLabel, BorderLayout.EAST);
 
     colorPanel = new JPanel(); // 色スライダー用パネル
-    colorPanel.setLayout(new GridLayout(4, 2, 5, 5));
+    colorPanel.setLayout(new GridLayout(4, 3, 5, 5));
 
+    colorIndicatePanel = new ColorIndicatePanel();
+    colorIndicatePanel.setPreferredSize(new Dimension(50, 50));
+
+    // colorPanel.add(new JLabel("Current Color:", JLabel.LEFT));
+    // colorPanel.add(colorIndicatePanel);
     colorPanel.add(new JLabel("Red (R):", JLabel.RIGHT));
     colorPanel.add(rSlider);
     colorPanel.add(rLabel);
