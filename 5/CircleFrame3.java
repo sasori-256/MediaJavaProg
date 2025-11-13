@@ -104,6 +104,9 @@ class ColorIndicatePanel extends JPanel {
     super.paintComponent(g);
     g.setColor(color);
     g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+    g.setColor(Color.BLACK);
+    g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
   }
 }
 
@@ -112,19 +115,26 @@ class CircleFrame3 extends JFrame implements ChangeListener {
   private JPanel colorPanel;
   private JSlider radiusSlider, rSlider, gSlider, bSlider, aSlider;
   private JLabel radiusLabel, rLabel, gLabel, bLabel, aLabel;
+
   private ColorIndicatePanel colorIndicatePanel;
+  private JTextField hexField;
 
   public CircleFrame3() {
-    this.setTitle("CircleFrame");
+    this.setTitle("Paint");
     this.setSize(1000, 800);
 
     panel = new CirclePanel(); // 全体のパネル
 
-    // スライダーの設定
+    // 半径スライダーの設定
     int initRadius = 5;
     radiusSlider = createSlider(5, 100, initRadius, 5, 5);
     radiusLabel = createLabel("Radius: " + initRadius);
     radiusSlider.addChangeListener(this);
+
+    // 半径スライダー表示用パネル
+    JPanel radiusPanel = new JPanel(new BorderLayout());
+    radiusPanel.add(radiusSlider, BorderLayout.CENTER);
+    radiusPanel.add(radiusLabel, BorderLayout.EAST);
 
     int initR = 255;
     int initG = 0;
@@ -146,30 +156,50 @@ class CircleFrame3 extends JFrame implements ChangeListener {
     bSlider.addChangeListener(this);
     aSlider.addChangeListener(this);
 
-    JPanel radiusPanel = new JPanel(new BorderLayout());
-    radiusPanel.add(radiusSlider, BorderLayout.CENTER);
-    radiusPanel.add(radiusLabel, BorderLayout.EAST);
+    // スライダーのレイアウト
+    JPanel sliderPanel = new JPanel();
+    sliderPanel.setLayout(new GridLayout(4, 3, 5, 5));
 
-    colorPanel = new JPanel(); // 色スライダー用パネル
-    colorPanel.setLayout(new GridLayout(4, 3, 5, 5));
+    sliderPanel.add(new JLabel("Red (R):", JLabel.RIGHT));
+    sliderPanel.add(rSlider);
+    sliderPanel.add(rLabel);
 
+    sliderPanel.add(new JLabel("Green (G):", JLabel.RIGHT));
+    sliderPanel.add(gSlider);
+    sliderPanel.add(gLabel);
+
+    sliderPanel.add(new JLabel("Blue (B):", JLabel.RIGHT));
+    sliderPanel.add(bSlider);
+    sliderPanel.add(bLabel);
+
+    sliderPanel.add(new JLabel("Alpha (A):", JLabel.RIGHT));
+    sliderPanel.add(aSlider);
+    sliderPanel.add(aLabel);
+
+    // 色表示パネル
     colorIndicatePanel = new ColorIndicatePanel();
     colorIndicatePanel.setPreferredSize(new Dimension(50, 50));
+    colorIndicatePanel.setColor(new Color(initR, initG, initB, initA));
 
-    // colorPanel.add(new JLabel("Current Color:", JLabel.LEFT));
-    // colorPanel.add(colorIndicatePanel);
-    colorPanel.add(new JLabel("Red (R):", JLabel.RIGHT));
-    colorPanel.add(rSlider);
-    colorPanel.add(rLabel);
-    colorPanel.add(new JLabel("Green (G):", JLabel.RIGHT));
-    colorPanel.add(gSlider);
-    colorPanel.add(gLabel);
-    colorPanel.add(new JLabel("Blue (B):", JLabel.RIGHT));
-    colorPanel.add(bSlider);
-    colorPanel.add(bLabel);
-    colorPanel.add(new JLabel("Alpha (A):", JLabel.RIGHT));
-    colorPanel.add(aSlider);
-    colorPanel.add(aLabel);
+    // 16進数表示テキストフィールド
+    hexField = new JTextField(7);
+    hexField.setHorizontalAlignment(JTextField.CENTER);
+    hexField.setEditable(false);
+    hexField.setFont(new Font("Monospaced", Font.BOLD, 16));
+    hexField.setText(String.format("#%02x%02x%02x", initR, initG, initB));
+
+    // 色プレビュー用パネルのレイアウト
+    JPanel previewPanel = new JPanel();
+    previewPanel.setLayout(new BorderLayout(10, 10));
+    previewPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+
+    previewPanel.add(new JLabel("Preview", JLabel.CENTER), BorderLayout.NORTH);
+    previewPanel.add(colorIndicatePanel, BorderLayout.CENTER);
+    previewPanel.add(hexField, BorderLayout.SOUTH);
+
+    colorPanel = new JPanel(new BorderLayout()); // 色スライダー用パネル
+    colorPanel.add(previewPanel, BorderLayout.WEST);
+    colorPanel.add(sliderPanel, BorderLayout.CENTER);
 
     this.setLayout(new BorderLayout());
     this.add(radiusPanel, BorderLayout.NORTH);
@@ -181,6 +211,7 @@ class CircleFrame3 extends JFrame implements ChangeListener {
   }
 
   private JSlider createSlider(int min, int max, int init, int majorTick, int minorTick) {
+    // スライダー作成処理をまとめておく
     JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, init);
     slider.setMajorTickSpacing(majorTick);
     slider.setMinorTickSpacing(minorTick);
@@ -190,6 +221,7 @@ class CircleFrame3 extends JFrame implements ChangeListener {
   }
 
   private JLabel createLabel(String text) {
+    // スライダー用ラベル作成処理をまとめておく
     JLabel label = new JLabel(text, JLabel.CENTER);
     label.setFont(new Font("Serif", Font.BOLD, 14));
     return label;
@@ -218,7 +250,11 @@ class CircleFrame3 extends JFrame implements ChangeListener {
       bLabel.setText("B: " + b);
       aLabel.setText("A: " + a);
 
-      panel.setColor(new Color(r, g, b, a));
+      Color newColor = new Color(r, g, b, a);
+
+      panel.setColor(newColor);
+      colorIndicatePanel.setColor(newColor);
+      hexField.setText(String.format("#%02x%02x%02x", r, g, b));
     }
   }
 
