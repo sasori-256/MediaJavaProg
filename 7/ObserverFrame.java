@@ -3,11 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+@SuppressWarnings("deprecation")
 class StringObservable extends Observable {
   private String value = "";
+
   public String getValue() {
     return value;
   }
+
   public void setValue(String s) {
     value = s;
     setChanged();
@@ -15,38 +18,43 @@ class StringObservable extends Observable {
   }
 }
 
-class TextFieldObserver extends JTextField implements Observer,ActionListener {
+@SuppressWarnings("deprecation")
+class TextFieldObserver extends JTextField implements Observer, ActionListener {
   private StringObservable stringObservable;
+
   public TextFieldObserver(StringObservable so) {
     stringObservable = so;
     stringObservable.addObserver(this);
-    this.setFont(new Font(Font.SANS_SERIF,Font.BOLD,26)); // 文字を大きくします．
+    this.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 26)); // 文字を大きくします．
     addActionListener(this);
   }
-  public void update(Observable o,Object arg) {
+
+  public void update(Observable o, Object arg) {
     String s = stringObservable.getValue();
     setText(s);
   }
+
   public void actionPerformed(ActionEvent e) {
-   String s = getText();
-   stringObservable.setValue(s);
+    String s = getText();
+    stringObservable.setValue(s);
   }
 }
 
 class ObserverFrame extends JFrame {
-    public ObserverFrame(){
-      this.setTitle("Observer Frame");
-      this.setLayout(new GridLayout(5,1));
-      StringObservable s = new StringObservable();
-      for (int i = 0; i < 5; i++) {
-        this.add(new TextFieldObserver(s));
-      }
-      s.setValue("Hello          ");
-      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      this.pack();
-      this.setVisible(true);
+  public ObserverFrame() {
+    this.setTitle("Observer Frame");
+    this.setLayout(new GridLayout(5, 1));
+    StringObservable s = new StringObservable();
+    for (int i = 0; i < 5; i++) {
+      this.add(new TextFieldObserver(s));
     }
-    public static void main(String argv[]) {
-      new ObserverFrame();
-   }
+    s.setValue("Hello          ");
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.pack();
+    this.setVisible(true);
+  }
+
+  public static void main(String argv[]) {
+    new ObserverFrame();
+  }
 }
