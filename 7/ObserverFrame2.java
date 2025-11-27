@@ -51,7 +51,7 @@ class ObserverFrame2 extends JFrame {
     this.setLayout(new GridLayout(5, 1));
 
     IntObservable num = new IntObservable();
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
       TextFieldObserver tfo = new TextFieldObserver(num, +i);
       this.add(tfo);
     }
